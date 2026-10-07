@@ -1,0 +1,58 @@
+services:
+  mysql-user-service:
+    image: mysql:9.7
+    container_name: mysql-user-service
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ms_users
+      MYSQL_USER: ms_users_app
+      MYSQL_PASSWORD: ms_users_pass
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_user_service_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mysql-product-service:
+    image: mysql:9.7
+    container_name: mysql-product-service
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ms_products
+      MYSQL_USER: ms_products_app
+      MYSQL_PASSWORD: ms_products_pass
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_product_service_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_user_service_data:
+  mysql_product_service_data:
