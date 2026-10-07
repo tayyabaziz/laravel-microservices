@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UserCreatedJob implements ShouldQueue
 {
@@ -21,7 +22,7 @@ class UserCreatedJob implements ShouldQueue
 
     public function handle(): void
     {
-        \Log::info('User created event processed', [
+        Log::info('User created event processed', [
             'user' => $this->userData,
             'queue' => $this->queue,
         ]);
